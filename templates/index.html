@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CivicEye | AI Civic Issue Reporter</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="#"><span class="brand-icon">◎</span> Civic<span>Eye</span></a>
+    <div class="nav-right"><span class="live-dot"></span> Prototype Demo</div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-copy">
+      <div class="eyebrow">SMARTER COMMUNITIES START HERE</div>
+      <h1>See a problem.<br><span>Report it.</span></h1>
+      <p>Use AI to identify public issues and help your community keep track of what needs attention.</p>
+      <a class="primary-link" href="#report">Report an issue <span>→</span></a>
+    </div>
+    <div class="hero-art">
+      <div class="art-card art-card-main">
+        <div class="art-top"><span>COMMUNITY REPORT</span><span class="art-status">● LIVE DEMO</span></div>
+        <div class="street-scene">
+          <div class="sun"></div><div class="building b1"></div><div class="building b2"></div>
+          <div class="road"></div><div class="road-line"></div><div class="tree">♣</div>
+          <div class="pin">!</div>
+        </div>
+        <div class="art-bottom"><span>AI issue detection</span><strong>Ready to help</strong></div>
+      </div>
+      <div class="floating-note"><span class="check">✓</span><span><b>AI-assisted</b><small>Issue identification</small></span></div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="stats">
+      <div class="stat"><span class="stat-icon">▤</span><div><b id="totalCount">0</b><small>Total reports</small></div></div>
+      <div class="stat"><span class="stat-icon amber">◷</span><div><b id="pendingCount">0</b><small>Pending</small></div></div>
+      <div class="stat"><span class="stat-icon blue">↻</span><div><b id="progressCount">0</b><small>In progress</small></div></div>
+      <div class="stat"><span class="stat-icon green">✓</span><div><b id="resolvedCount">0</b><small>Resolved</small></div></div>
+    </section>
+
+    <section class="content-grid" id="report">
+      <div class="panel report-panel">
+        <div class="section-heading">
+          <div><div class="eyebrow">STEP 01 — SUBMIT</div><h2>Report a civic issue</h2></div>
+          <span class="step-badge">AI powered</span>
+        </div>
+        <form id="reportForm">
+          <label class="upload-box" for="imageInput">
+            <input id="imageInput" name="image" type="file" accept="image/png,image/jpeg,image/webp" required>
+            <div id="uploadPlaceholder"><div class="upload-symbol">↑</div><b>Upload an issue photo</b><small>JPG, PNG or WEBP · Max 5 MB</small></div>
+            <img id="imagePreview" alt="Selected issue preview" hidden>
+          </label>
+          <label class="field-label" for="locationInput">Issue location <span>*</span></label>
+          <input class="text-input" id="locationInput" name="location" placeholder="e.g. Near City Park, Main Road" required maxlength="180">
+          <label class="field-label" for="detailsInput">Additional details <small>(optional)</small></label>
+          <textarea class="text-input" id="detailsInput" name="details" rows="3" placeholder="Add any useful details..." maxlength="500"></textarea>
+          <button class="primary-button" id="submitButton" type="submit">Analyze with AI & submit <span>→</span></button>
+          <p class="privacy-note">Your image is sent to the AI service for analysis and saved locally in this demo.</p>
+        </form>
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+        <div id="analysisCard" class="analysis-card" hidden></div>
+      </div>
+
+      <aside class="panel how-panel">
+        <div class="eyebrow">HOW IT WORKS</div><h2>From photo to report</h2>
+        <div class="how-step"><span>1</span><div><b>Upload a photo</b><small>Choose a clear picture of the issue.</small></div></div>
+        <div class="how-step"><span>2</span><div><b>AI analyzes it</b><small>Gemini suggests a category and priority.</small></div></div>
+        <div class="how-step"><span>3</span><div><b>Submit your report</b><small>Your report appears in the dashboard.</small></div></div>
+        <div class="note-box"><b>Prototype note</b><p>AI results are suggestions. Reports are stored in this demo and are not automatically sent to government departments.</p></div>
+      </aside>
+    </section>
+
+    <section class="panel dashboard-panel">
+      <div class="section-heading dashboard-heading">
+        <div><div class="eyebrow">COMMUNITY OVERVIEW</div><h2>Recent reports</h2></div>
+        <button class="refresh-button" id="refreshButton">↻ Refresh</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ISSUE</th><th>LOCATION</th><th>AI PRIORITY</th><th>STATUS</th><th>REPORTED</th></tr></thead>
+          <tbody id="complaintRows"><tr><td colspan="5" class="empty-state">No reports yet. Submit the first one above.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer><a class="brand" href="#">◎ Civic<span>Eye</span></a><span>AI-assisted civic reporting · College prototype</span></footer>
+  </main>
+
+  <button class="chat-launcher" id="chatLauncher" aria-label="Open CivicEye Assistant" aria-expanded="false">
+    <span class="chat-launcher-icon">✦</span><span>Ask CivicEye</span>
+  </button>
+  <section class="chat-panel" id="chatPanel" aria-label="CivicEye Assistant" hidden>
+    <div class="chat-header">
+      <div class="chat-avatar">✦</div>
+      <div class="chat-header-copy"><b>CivicEye Assistant</b><small><span class="live-dot"></span> AI civic helpdesk</small></div>
+      <button class="chat-close" id="chatClose" aria-label="Close chat">×</button>
+    </div>
+    <div class="chat-messages" id="chatMessages" aria-live="polite">
+      <div class="chat-bubble assistant-bubble">Hi! I'm CivicEye Assistant. I can explain how to report an issue or help you check a report status. How can I help?</div>
+      <div class="suggestions" id="chatSuggestions">
+        <button type="button" class="suggestion">How do I report a pothole?</button>
+        <button type="button" class="suggestion">How can I track my complaint?</button>
+        <button type="button" class="suggestion">What happens after I submit?</button>
+      </div>
+    </div>
+    <form class="chat-form" id="chatForm">
+      <input id="chatInput" type="text" maxlength="1200" placeholder="Ask a civic question..." autocomplete="off" aria-label="Message CivicEye Assistant" required>
+      <button type="submit" id="chatSend" aria-label="Send message">↑</button>
+    </form>
+    <div class="chat-footnote">AI responses may be inaccurate. Verify important information.</div>
+  </section>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
