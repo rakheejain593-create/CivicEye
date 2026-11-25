@@ -33,7 +33,7 @@ app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 UPLOAD_DIR = BASE_DIR / "static" / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-DB_PATH = BASE_DIR / "civiceye.db"
+DB_PATH = "/tmp/civiceye.db"
 
 ALLOWED_TYPES = {
     "image/jpeg": ".jpg",
