@@ -10,7 +10,7 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from dotenv import load_dotenv
 from PIL import Image, UnidentifiedImageError
 from groq import Groq, APIStatusError
@@ -30,7 +30,7 @@ MODEL_NAME = os.getenv(
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 
-UPLOAD_DIR = BASE_DIR / "static" / "uploads"
+UPLOAD_DIR = Path("/tmp/civiceye_uploads")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 DB_PATH = "/tmp/civiceye.db"
@@ -320,12 +320,14 @@ def complaint_to_dict(row):
     item = dict(row)
 
     item["image_url"] = (
-        f"/static/uploads/{item.pop('image_filename')}"
+                        f"/uploads/{item.pop('image_filename')}"
     )
 
     return item
 
-
+@app.get("/uploads/<path:filename>")
+def uploaded_file(filename):
+    return send_from_directory(UPLOAD_DIR, filename)
 # ==========================================
 # HOME PAGE
 # ==========================================
